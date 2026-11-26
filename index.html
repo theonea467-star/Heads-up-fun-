@@ -94,8 +94,13 @@ var ROUND=60,AC=null,SOUND=true;
 function sfx(k){if(!SOUND)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();var seq={ok:[[660,.08],[880,.12]],pass:[[330,.1],[250,.14]],end:[[523,.12],[392,.12],[262,.25]],tick:[[600,.06]]}[k];var t0=AC.currentTime;seq.forEach(function(n,j){var o=AC.createOscillator(),g=AC.createGain();o.type="sine";o.frequency.value=n[0];o.connect(g);g.connect(AC.destination);var s=t0+j*.1;g.gain.setValueAtTime(.2,s);g.gain.exponentialRampToValueAtTime(.001,s+n[1]+.05);o.start(s);o.stop(s+n[1]+.06)})}catch(e){}}
 function shuffle(a){for(var k=a.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var x=a[k];a[k]=a[j];a[j]=x}return a}
 function show(id){document.querySelectorAll(".scr").forEach(function(s){s.classList.toggle("on",s.id===id)});document.body.classList.toggle("playing",id!=="home")}
-DECKS["Mixed"]={icon:"🎲",words:[].concat.apply([],Object.keys(DECKS).map(function(k){return DECKS[k].words}))};
-["Mixed"].concat(Object.keys(DECKS).filter(function(k){return k!=="Mixed"})).forEach(function(n){var b=document.createElement("button");b.className="deck";b.innerHTML="<span>"+DECKS[n].icon+"</span>"+n;b.onclick=function(){start(n)};$("decks").appendChild(b)});
+var LOCKED={"Demon Slayer":1};
+function isUnlocked(n){if(!LOCKED[n])return true;try{return +localStorage.getItem("hu-unlock-"+n)>Date.now()}catch(e){return false}}
+function buildMixed(){DECKS["Mixed"].words=[].concat.apply([],Object.keys(DECKS).filter(function(k){return k!=="Mixed"&&isUnlocked(k)}).map(function(k){return DECKS[k].words}))}
+DECKS["Mixed"]={icon:"🎲",words:[]};buildMixed();
+function watchAd(done){/* TEMP placeholder: swap for the real AdMob rewarded ad later */if(confirm("Watch a short ad to unlock this category for 24 hours?"))done()}
+function renderDecks(){$("decks").innerHTML="";["Mixed"].concat(Object.keys(DECKS).filter(function(k){return k!=="Mixed"})).forEach(function(n){var lock=!isUnlocked(n);var b=document.createElement("button");b.className="deck";b.innerHTML="<span>"+DECKS[n].icon+"</span>"+n+(lock?" 🔒":"");b.onclick=function(){if(lock){watchAd(function(){try{localStorage.setItem("hu-unlock-"+n,Date.now()+86400000)}catch(e){}buildMixed();renderDecks()})}else start(n)};$("decks").appendChild(b)})}
+renderDecks(); b=document.createElement("button");b.className="deck";b.innerHTML="<span>"+DECKS[n].icon+"</span>"+n;b.onclick=function(){start(n)};$("decks").appendChild(b)});
 function showCard(){if(i>=words.length){words=shuffle(words);i=0}cur=words[i];$("pic").textContent=cur[1];var w=$("word");w.textContent=cur[0];w.style.fontSize="min(26cqh,"+(92/Math.max(cur[0].length,5))+"cqw)"}
 function hud(){$("time").textContent=t;$("score").textContent=score}
 function flash(ok){var s=$("stage");s.className=ok?"ok":"pass";setTimeout(function(){s.className=""},350)}
