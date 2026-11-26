@@ -85,7 +85,8 @@ var DECKS={
  "Food":mk("🍽️","Pizza:🍕|Burger:🍔|Sushi:🍣|Ramen:🍜|Tacos:🌮|Pasta:🍝|Dumplings:🥟|Fried Rice:🍚|Steak:🥩|Lasagna:🍝|Curry:🍛|Biryani:🍛|Pho:🍜|Pad Thai:🍜|Shawarma:🌯|Kebab:🍢|Hot Dog:🌭|Sandwich:🥪|Salad:🥗|Soup:🍲|Pancakes:🥞|Waffles:🧇|Donuts:🍩|Ice Cream:🍦|Chocolate Cake:🍰|Cheesecake:🍰|Brownies:🍫|Cookies:🍪|Croissant:🥐|Bagel:🥯|Burrito:🌯|Quesadilla:🫓|Nachos:🧀|Spring Rolls:🥢|Noodles:🍜|Fried Chicken:🍗|Grilled Cheese:🧀|Macaroni:🧀|Spaghetti:🍝|Jollof Rice:🍚|Nshima:🍚|Kapenta:🐟|Chicken Curry:🍛|Fish and Chips:🍟|Roast Chicken:🍗|Meatballs:🧆|Samosa:🥟|Falafel:🧆|Hummus:🥙|Tofu Stir Fry:🥘"),
  "Animals":{icon:"🐾",words:[["Elephant","🐘"],["Lion","🦁"],["Monkey","🐒"],["Penguin","🐧"],["Giraffe","🦒"],["Frog","🐸"],["Snake","🐍"],["Shark","🦈"],["Horse","🐴"],["Butterfly","🦋"],["Crab","🦀"],["Owl","🦉"]]},
  "Snacks":{icon:"🍽️",words:[["Pizza","🍕"],["Banana","🍌"],["Burger","🍔"],["Ice Cream","🍦"],["Watermelon","🍉"],["Egg","🥚"],["Bread","🍞"],["Chicken","🍗"],["Cake","🎂"],["Popcorn","🍿"],["Corn","🌽"],["Carrot","🥕"]]},
- "Things":{icon:"🎒",words:[["Bicycle","🚲"],["Guitar","🎸"],["Phone","📱"],["Clock","⏰"],["Umbrella","☂️"],["Car","🚗"],["Football","⚽"],["Camera","📷"],["Book","📚"],["Key","🔑"],["Rocket","🚀"],["Light Bulb","💡"]]}, "Demon Slayer":mk("🗡️","Tanjiro|Nezuko|Zenitsu|Inosuke|Giyu|Shinobu|Rengoku|Tengen Uzui|Mitsuri|Muichiro|Gyomei|Sanemi|Obanai|Muzan|Kanao|Genya|Tamayo|Yushiro|Akaza|Doma|Kokushibo|Daki|Gyutaro|Enmu|Rui|Hantengu|Urokodaki|Kagaya|Kanae|Hashira|Water Breathing|Thunder Breathing|Flame Breathing|Beast Breathing|Nichirin Sword|Wisteria|Blood Demon Art|Mugen Train|Entertainment District|Swordsmith Village|Final Selection|Hinokami Kagura|Sun Breathing|Demon Mark|Straw Hat|Demon Slayer Corps|Demon Moon|Mount Natagumo")
+ "Things":{icon:"🎒",words:[["Bicycle","🚲"],["Guitar","🎸"],["Phone","📱"],["Clock","⏰"],["Umbrella","☂️"],["Car","🚗"],["Football","⚽"],["Camera","📷"],["Book","📚"],["Key","🔑"],["Rocket","🚀"],["Light Bulb","💡"]]},
+ "Demon Slayer":mk("🗡️","Tanjiro|Nezuko|Zenitsu|Inosuke|Giyu|Shinobu|Rengoku|Tengen Uzui|Mitsuri|Muichiro|Gyomei|Sanemi|Obanai|Muzan|Kanao|Genya|Tamayo|Yushiro|Akaza|Doma|Kokushibo|Daki|Gyutaro|Enmu|Rui|Hantengu|Urokodaki|Kagaya|Kanae|Hashira|Water Breathing|Thunder Breathing|Flame Breathing|Beast Breathing|Nichirin Sword|Wisteria|Blood Demon Art|Mugen Train|Entertainment District|Swordsmith Village|Final Selection|Hinokami Kagura|Sun Breathing|Demon Mark|Straw Hat|Demon Slayer Corps|Demon Moon|Mount Natagumo")
 };
 var $=function(id){return document.getElementById(id)};
 var IOS=/iP(hone|ad|od)/.test(navigator.userAgent);
@@ -100,14 +101,14 @@ function buildMixed(){DECKS["Mixed"].words=[].concat.apply([],Object.keys(DECKS)
 DECKS["Mixed"]={icon:"🎲",words:[]};buildMixed();
 function watchAd(done){/* TEMP placeholder: swap for the real AdMob rewarded ad later */if(confirm("Watch a short ad to unlock this category for 24 hours?"))done()}
 function renderDecks(){$("decks").innerHTML="";["Mixed"].concat(Object.keys(DECKS).filter(function(k){return k!=="Mixed"})).forEach(function(n){var lock=!isUnlocked(n);var b=document.createElement("button");b.className="deck";b.innerHTML="<span>"+DECKS[n].icon+"</span>"+n+(lock?" 🔒":"");b.onclick=function(){if(lock){watchAd(function(){try{localStorage.setItem("hu-unlock-"+n,Date.now()+86400000)}catch(e){}buildMixed();renderDecks()})}else start(n)};$("decks").appendChild(b)})}
-renderDecks(); b=document.createElement("button");b.className="deck";b.innerHTML="<span>"+DECKS[n].icon+"</span>"+n;b.onclick=function(){start(n)};$("decks").appendChild(b)});
+renderDecks();
 function showCard(){if(i>=words.length){words=shuffle(words);i=0}cur=words[i];$("pic").textContent=cur[1];var w=$("word");w.textContent=cur[0];w.style.fontSize="min(26cqh,"+(92/Math.max(cur[0].length,5))+"cqw)"}
 function hud(){$("time").textContent=t;$("score").textContent=score}
 function flash(ok){var s=$("stage");s.className=ok?"ok":"pass";setTimeout(function(){s.className=""},350)}
 function mark(ok){if(!running)return;log.push([cur[0],ok]);if(ok)score++;flash(ok);sfx(ok?"ok":"pass");try{navigator.vibrate&&navigator.vibrate(ok?60:[30,40,30])}catch(e){}i++;showCard();hud();armed=false}
 async function start(name){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();AC.resume()}catch(e){}
   try{if(typeof DeviceMotionEvent!=="undefined"&&typeof DeviceMotionEvent.requestPermission==="function"){await DeviceMotionEvent.requestPermission()}}catch(e){}
-  deck=name;words=shuffle(DECKS[name].words.slice());i=0;score=0;log=[];t=ROUND;
+  buildMixed();deck=name;words=shuffle(DECKS[name].words.slice());i=0;score=0;log=[];t=ROUND;
   $("deckname").textContent=name;$("tilt").textContent="Checking tilt…";show("ready");var c=3;$("count").textContent=c;
   var iv=setInterval(function(){c--;if(c>0){$("count").textContent=c;sfx("tick");if(c===1&&$("tilt").textContent==="Checking tilt…")$("tilt").textContent="No tilt detected. Use the buttons."}else{clearInterval(iv);go()}},1000)
 }
@@ -121,10 +122,11 @@ window.addEventListener("devicemotion",function(e){
 });
 window.addEventListener("keydown",function(e){if(e.key==="ArrowDown")mark(true);if(e.key==="ArrowUp")mark(false)});
 $("bo").onclick=function(){mark(true)};$("bp").onclick=function(){mark(false)};
-$("again").onclick=function(){start(deck)};$("home2").onclick=function(){show("home")};
+$("again").onclick=function(){start(deck)};$("home2").onclick=function(){buildMixed();renderDecks();show("home")};
 document.querySelectorAll(".opt[data-t]").forEach(function(b){b.onclick=function(){ROUND=+b.dataset.t;document.querySelectorAll(".opt[data-t]").forEach(function(x){x.classList.toggle("sel",x===b)})}});
 $("snd").onclick=function(){SOUND=!SOUND;this.textContent=SOUND?"Sound on":"Sound off";this.classList.toggle("sel",SOUND)};
 if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
 </script>
 </body>
 </html>
+
